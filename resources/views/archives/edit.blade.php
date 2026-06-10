@@ -10,7 +10,7 @@
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
-                        <form action="{{ route('archives.update', $archive) }}" method="POST" class="max-w-lg">
+                        <form action="{{ route('archives.update', $archive) }}" method="POST" enctype="multipart/form-data" class="max-w-lg">
                             @csrf
                             @method('PUT')
 
@@ -49,6 +49,18 @@
                                 <x-input-label for="description" :value="__('Deskripsi (opsional)')" />
                                 <textarea id="description" name="description" rows="3" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $archive->description) }}</textarea>
                                 <x-input-error class="mt-2" :messages="$errors->get('description')" />
+                            </div>
+
+                            <div class="mb-6">
+                                <x-input-label for="file" :value="__('File PDF')" />
+                                @if($archive->file_path)
+                                    <p class="mt-1 text-sm text-gray-600">
+                                        File saat ini: <span class="font-medium text-gray-900">{{ $archive->file_name }}</span>
+                                    </p>
+                                @endif
+                                <input id="file" name="file" type="file" accept="application/pdf" class="block mt-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+                                <p class="mt-1 text-xs text-gray-500">Kosongkan jika tidak ingin mengubah file.</p>
+                                <x-input-error class="mt-2" :messages="$errors->get('file')" />
                             </div>
 
                             <div class="flex items-center space-x-3">

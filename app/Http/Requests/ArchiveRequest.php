@@ -14,7 +14,7 @@ class ArchiveRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'category_id' => ['required', 'exists:categories,id'],
             'document_number' => [
                 'required',
@@ -26,5 +26,13 @@ class ArchiveRequest extends FormRequest
             'document_date' => ['required', 'date'],
             'description' => ['nullable', 'string'],
         ];
+
+        if ($this->isMethod('POST')) {
+            $rules['file'] = ['required', 'mimes:pdf', 'max:10240'];
+        } else {
+            $rules['file'] = ['nullable', 'mimes:pdf', 'max:10240'];
+        }
+
+        return $rules;
     }
 }

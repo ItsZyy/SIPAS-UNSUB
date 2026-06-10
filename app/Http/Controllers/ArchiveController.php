@@ -7,6 +7,7 @@ use App\Models\Archive;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ArchiveController extends Controller
@@ -27,7 +28,15 @@ class ArchiveController extends Controller
 
     public function store(ArchiveRequest $request): RedirectResponse
     {
-        Archive::create($request->validated() + ['uploaded_by' => Auth::id()]);
+        $data = $request->validated();
+
+        if ($request->hasFile('file')) {
+            $data['file_path'] = $request->file('file')->store('archives', 'public');
+        }
+
+        $data['uploaded_by'] = Auth::id();
+
+        Archive::create($data);
 
         return redirect()->route('archives.index')
             ->with('success', 'Arsip berhasil ditambahkan.');
@@ -47,7 +56,17 @@ class ArchiveController extends Controller
 
     public function update(ArchiveRequest $request, Archive $archive): RedirectResponse
     {
-        $archive->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('file')) {
+            if ($archive->file_path && Storage::disk('public')->exists($archive->file_path)) {
+                Storage::disk('public')->delete($archive->file_path);
+            }
+
+            $data['file_path'] = $request->file('file')->store('archives', 'public');
+        }
+
+        $archive->update($data);
 
         return redirect()->route('archives.index')
             ->with('success', 'Arsip berhasil diperbarui.');
@@ -55,6 +74,10 @@ class ArchiveController extends Controller
 
     public function destroy(Archive $archive): RedirectResponse
     {
+        if ($archive->file_path && Storage::disk('public')->exists($archive->file_path)) {
+            Storage::disk('public')->delete($archive->file_path);
+        }
+
         $archive->delete();
 
         return redirect()->route('archives.index')
