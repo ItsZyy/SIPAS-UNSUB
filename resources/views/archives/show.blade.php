@@ -58,6 +58,10 @@
                             @endif
 
                             @if($archive->file_path)
+                                @php
+                                    $fileExists = Storage::disk('public')->exists($archive->file_path);
+                                    $fileUrl = url('storage/' . $archive->file_path);
+                                @endphp
                                 <div class="md:col-span-2">
                                     <dt class="text-sm font-medium text-gray-500">File</dt>
                                     <dd class="mt-2">
@@ -65,11 +69,11 @@
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                 {{ $archive->file_name }}
                                             </span>
-                                            @if(Storage::disk('public')->exists($archive->file_path))
-                                                <a href="{{ $archive->file_url }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                            @if($fileExists)
+                                                <a href="{{ $fileUrl }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                                     Preview PDF
                                                 </a>
-                                                <a href="{{ $archive->file_url }}" download class="inline-flex items-center px-3 py-1.5 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                                <a href="{{ $fileUrl }}" download class="inline-flex items-center px-3 py-1.5 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                                     Download PDF
                                                 </a>
                                             @else
