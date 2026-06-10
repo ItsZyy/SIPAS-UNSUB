@@ -36,4 +36,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/admin/archives', [App\Http\Controllers\ArchiveController::class, 'index'])
+        ->middleware('role:admin,operator')
+        ->name('archives.index');
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/archives/create', [App\Http\Controllers\ArchiveController::class, 'create'])
+            ->name('archives.create');
+        Route::post('/admin/archives', [App\Http\Controllers\ArchiveController::class, 'store'])
+            ->name('archives.store');
+        Route::get('/admin/archives/{archive}/edit', [App\Http\Controllers\ArchiveController::class, 'edit'])
+            ->name('archives.edit');
+        Route::put('/admin/archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'update'])
+            ->name('archives.update');
+        Route::delete('/admin/archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'destroy'])
+            ->name('archives.destroy');
+    });
+
+    Route::get('/admin/archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'show'])
+        ->middleware('role:admin,operator')
+        ->name('archives.show');
+});
+
 require __DIR__.'/auth.php';
