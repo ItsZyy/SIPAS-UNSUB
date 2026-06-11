@@ -14,9 +14,35 @@ class ArchiveController extends Controller
 {
     public function index(): View
     {
-        $archives = Archive::with(['category', 'uploader'])->latest()->paginate(10);
+        $categories = Category::all();
 
-        return view('archives.index', compact('archives'));
+        $archives = Archive::with(['category', 'uploader'])
+            ->when(request('search'), function ($query) {
+                $query->where(function ($q) {
+                    $q->where('document_number', 'like', '%' . request('search') . '%')
+                      ->orWhere('title', 'like', '%' . request('search') . '%');
+                });
+            })
+            ->when(request('category'), function ($query) {
+                $query->where('category_id', request('category'));
+            })
+            ->when(request('year'), function ($query) {
+                $query->whereYear('document_date', request('year'));
+            })
+            ->when(request('sort'), function ($query) {
+                match (request('sort')) {
+                    'oldest'    => $query->oldest(),
+                    'title_asc' => $query->orderBy('title'),
+                    'title_desc'=> $query->orderByDesc('title'),
+                    default     => $query->latest(),
+                };
+            }, function ($query) {
+                $query->latest();
+            })
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('archives.index', compact('archives', 'categories'));
     }
 
     public function create(): View
