@@ -59,4 +59,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('archives.show');
 });
 
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/admin/users', [App\Http\Controllers\UserController::class, 'index'])
+        ->name('users.index');
+    Route::get('/admin/users/create', [App\Http\Controllers\UserController::class, 'create'])
+        ->name('users.create');
+    Route::post('/admin/users', [App\Http\Controllers\UserController::class, 'store'])
+        ->name('users.store');
+    Route::get('/admin/users/{user}/edit', [App\Http\Controllers\UserController::class, 'edit'])
+        ->name('users.edit');
+    Route::put('/admin/users/{user}', [App\Http\Controllers\UserController::class, 'update'])
+        ->name('users.update');
+    Route::get('/admin/users/{user}/reset-password', [App\Http\Controllers\UserController::class, 'editPassword'])
+        ->name('users.reset-password');
+    Route::put('/admin/users/{user}/reset-password', [App\Http\Controllers\UserController::class, 'updatePassword'])
+        ->name('users.update-password');
+    Route::delete('/admin/users/{user}', [App\Http\Controllers\UserController::class, 'destroy'])
+        ->name('users.destroy');
+});
+
 require __DIR__.'/auth.php';
