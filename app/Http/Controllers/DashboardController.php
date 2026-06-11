@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Archive;
 use App\Models\Category;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -13,10 +12,11 @@ class DashboardController extends Controller
     {
         $totalArchives = Archive::count();
         $totalCategories = Category::count();
-        $archivesThisMonth = Archive::whereMonth('document_date', now()->month)
-            ->whereYear('document_date', now()->year)
+        $archivesThisMonth = Archive::whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
             ->count();
-        $archivesThisYear = Archive::whereYear('document_date', now()->year)->count();
+
+        $archivesThisYear = Archive::whereYear('created_at', now()->year)->count();
 
         $recentArchives = Archive::with(['category', 'uploader'])
             ->latest()

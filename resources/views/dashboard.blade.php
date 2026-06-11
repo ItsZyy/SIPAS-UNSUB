@@ -4,9 +4,7 @@
 
         <main class="flex-1 p-8">
             <div class="max-w-7xl mx-auto">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold text-gray-900">Dashboard</h2>
-                </div>
+                <h2 class="text-2xl font-semibold text-gray-900 mb-6">Dashboard</h2>
 
                 <div class="mb-4">
                     <h3 class="text-lg font-medium text-gray-900">Selamat datang, {{ auth()->user()->name }}!</h3>
