@@ -1,5 +1,10 @@
 <aside class="w-64 bg-white border-r border-gray-200">
     <div class="p-4">
+        <div class="flex items-center justify-center mb-6">
+            <a href="{{ route('dashboard') }}">
+                <img src="{{ asset('images/logo/favicon.png') }}" alt="SIPAS UNSUB" class="h-10 w-auto">
+            </a>
+        </div>
         <nav class="space-y-1">
             <a href="{{ route('dashboard') }}"
                class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-50' }}">
