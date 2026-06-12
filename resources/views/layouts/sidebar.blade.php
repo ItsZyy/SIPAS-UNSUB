@@ -1,8 +1,12 @@
 <aside class="w-64 bg-white border-r border-gray-200">
     <div class="p-4">
         <div class="flex items-center justify-center mb-6">
-            <a href="{{ route('dashboard') }}">
-                <img src="{{ asset('images/logo/favicon.png') }}" alt="SIPAS UNSUB" class="h-10 w-auto">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                <img src="{{ asset('images/logo/logo-icon.png') }}" alt="SIPAS UNSUB" class="h-14 w-auto flex-shrink-0">
+                <div class="flex flex-col leading-tight">
+                    <span class="text-lg font-bold text-indigo-600 tracking-wide">SIPAS</span>
+                    <span class="text-xs text-gray-500 font-medium -mt-1">Sistem Informasi<br>Pengarsipan UNSUB</span>
+                </div>
             </a>
         </div>
         <nav class="space-y-1">

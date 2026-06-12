@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('images/logo/logo-icon.png') }}" alt="SIPAS UNSUB" class="block h-9 w-auto">
+                        <img src="{{ asset('images/logo/logounsub.png') }}" alt="SIPAS UNSUB" class="block h-14 w-auto">
                     </a>
                 </div>
 
