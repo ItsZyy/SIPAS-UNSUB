@@ -25,9 +25,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                                     </svg>
                                 </div>
-                                <div class="ml-4">
+                                <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Total Arsip</p>
-                                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalArchives) }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalArchives) }}</p>
+                                        @include('components.growth-indicator', ['growth' => $card1Growth])
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -41,9 +44,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                     </svg>
                                 </div>
-                                <div class="ml-4">
+                                <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Total Kategori</p>
-                                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalCategories) }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalCategories) }}</p>
+                                        @include('components.growth-indicator', ['growth' => $card2Growth])
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -57,9 +63,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                 </div>
-                                <div class="ml-4">
+                                <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Arsip Bulan Ini</p>
-                                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($archivesThisMonth) }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($archivesThisMonth) }}</p>
+                                        @include('components.growth-indicator', ['growth' => $card3Growth])
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -73,12 +82,22 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                     </svg>
                                 </div>
-                                <div class="ml-4">
+                                <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Arsip Tahun Ini</p>
-                                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($archivesThisYear) }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($archivesThisYear) }}</p>
+                                        @include('components.growth-indicator', ['growth' => $card4Growth])
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
+                    <div class="p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Aktivitas Surat 7 Hari Terakhir</h3>
+                        <div id="weeklyChart"></div>
                     </div>
                 </div>
 
@@ -150,4 +169,76 @@
             </div>
         </main>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                chart: {
+                    type: 'area',
+                    height: 300,
+                    fontFamily: 'Figtree, sans-serif',
+                    toolbar: { show: false },
+                    zoom: { enabled: false }
+                },
+                series: [{
+                    name: 'Jumlah Surat',
+                    data: @json($weeklyData)
+                }],
+                xaxis: {
+                    categories: @json($weeklyLabels),
+                    labels: {
+                        style: { colors: '#6b7280', fontSize: '12px' }
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        style: { colors: '#6b7280', fontSize: '12px' }
+                    },
+                    min: 0,
+                    forceNiceScale: true
+                },
+                grid: {
+                    borderColor: '#e5e7eb',
+                    strokeDashArray: 4,
+                    xaxis: { lines: { show: false } }
+                },
+                dataLabels: { enabled: false },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.4,
+                        opacityTo: 0.1,
+                        stops: [0, 100]
+                    }
+                },
+                colors: ['#6366f1'],
+                markers: {
+                    size: 4,
+                    colors: ['#fff'],
+                    strokeColors: ['#6366f1'],
+                    strokeWidth: 2,
+                    hover: { size: 6 }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val + ' surat';
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector('#weeklyChart'), options);
+            chart.render();
+        });
+    </script>
+    @endpush
 </x-app-layout>
