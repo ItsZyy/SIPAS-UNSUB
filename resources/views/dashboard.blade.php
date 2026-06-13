@@ -4,16 +4,9 @@
 
         <main class="flex-1 p-8">
             <div class="max-w-7xl mx-auto">
-                <h2 class="text-2xl font-semibold text-gray-900 mb-6">Dashboard</h2>
-
-                <div class="mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Selamat datang, {{ auth()->user()->name }}!</h3>
-                    <p class="mt-1 text-sm text-gray-600">
-                        Anda login sebagai
-                        <span class="font-semibold {{ auth()->user()->isAdmin() ? 'text-purple-600' : 'text-blue-600' }}">
-                            {{ ucfirst(auth()->user()->role) }}
-                        </span>.
-                    </p>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
+                    <p class="mt-1 text-sm text-gray-500">Smart Letter Archiving System</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
