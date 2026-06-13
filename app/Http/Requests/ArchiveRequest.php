@@ -12,6 +12,19 @@ class ArchiveRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('document_date')) {
+            $date = $this->input('document_date');
+
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $date, $matches)) {
+                $this->merge([
+                    'document_date' => sprintf('%04d-%02d-%02d', $matches[3], $matches[2], $matches[1]),
+                ]);
+            }
+        }
+    }
+
     public function rules(): array
     {
         $rules = [

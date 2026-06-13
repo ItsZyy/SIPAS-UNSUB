@@ -40,7 +40,7 @@
 
                             <div class="mb-4">
                                 <x-input-label for="document_date" :value="__('Tanggal Dokumen')" />
-                                <x-text-input id="document_date" class="block mt-1 w-full" type="date" name="document_date" :value="old('document_date')" required />
+                                <x-text-input id="document_date" class="block mt-1 w-full" type="date" name="document_date" :value="old('document_date', now()->format('Y-m-d'))" required />
                                 <x-input-error class="mt-2" :messages="$errors->get('document_date')" />
                             </div>
 

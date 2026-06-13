@@ -30,8 +30,7 @@ Aplikasi ini digunakan untuk mengelola arsip surat dan dokumen digital di lingku
 - Manage all archives
 
 2. Operator
-- Add and edit archives
-- Upload PDF files
+- Download PDF files
 - Search and filter archives
 - Cannot manage users
 
@@ -52,7 +51,6 @@ Aplikasi ini digunakan untuk mengelola arsip surat dan dokumen digital di lingku
 Archive:
 - nomor_dokumen
 - nama_dokumen
-- jenis (masuk/keluar)
 - category_id
 - tanggal
 - file_pdf
