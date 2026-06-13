@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="stat-card bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="flex items-center">
                                 <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
@@ -28,7 +28,7 @@
                                 <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Total Arsip</p>
                                     <div class="flex items-center gap-2">
-                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalArchives) }}</p>
+                                        <p class="stat-value text-2xl font-semibold text-gray-900" data-target="{{ $totalArchives }}">0</p>
                                         @include('components.growth-indicator', ['growth' => $card1Growth])
                                     </div>
                                 </div>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="stat-card bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="flex items-center">
                                 <div class="p-3 rounded-full bg-green-100 text-green-600">
@@ -47,7 +47,7 @@
                                 <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Total Kategori</p>
                                     <div class="flex items-center gap-2">
-                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalCategories) }}</p>
+                                        <p class="stat-value text-2xl font-semibold text-gray-900" data-target="{{ $totalCategories }}">0</p>
                                         @include('components.growth-indicator', ['growth' => $card2Growth])
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="stat-card bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="flex items-center">
                                 <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
@@ -66,7 +66,7 @@
                                 <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Arsip Bulan Ini</p>
                                     <div class="flex items-center gap-2">
-                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($archivesThisMonth) }}</p>
+                                        <p class="stat-value text-2xl font-semibold text-gray-900" data-target="{{ $archivesThisMonth }}">0</p>
                                         @include('components.growth-indicator', ['growth' => $card3Growth])
                                     </div>
                                 </div>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="stat-card bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             <div class="flex items-center">
                                 <div class="p-3 rounded-full bg-purple-100 text-purple-600">
@@ -85,7 +85,7 @@
                                 <div class="ml-4 flex-1">
                                     <p class="text-sm font-medium text-gray-500">Arsip Tahun Ini</p>
                                     <div class="flex items-center gap-2">
-                                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($archivesThisYear) }}</p>
+                                        <p class="stat-value text-2xl font-semibold text-gray-900" data-target="{{ $archivesThisYear }}">0</p>
                                         @include('components.growth-indicator', ['growth' => $card4Growth])
                                     </div>
                                 </div>
@@ -171,8 +171,59 @@
     </div>
 
     @push('scripts')
+    <style>
+        .stat-card {
+            opacity: 0;
+            animation: statFadeIn 0.6s ease-out forwards;
+        }
+        .stat-card:nth-child(1) { animation-delay: 0.05s; }
+        .stat-card:nth-child(2) { animation-delay: 0.15s; }
+        .stat-card:nth-child(3) { animation-delay: 0.25s; }
+        .stat-card:nth-child(4) { animation-delay: 0.35s; }
+
+        @keyframes statFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            function animateStatValue(el, duration) {
+                var target = parseInt(el.getAttribute('data-target'), 10);
+                if (isNaN(target)) return;
+                var startTime = performance.now();
+
+                function formatNumber(num) {
+                    return num.toLocaleString('en-US');
+                }
+
+                function step(currentTime) {
+                    var elapsed = currentTime - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
+                    var eased = 1 - Math.pow(1 - progress, 3);
+                    var current = Math.round(eased * target);
+                    el.textContent = formatNumber(current);
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    }
+                }
+
+                requestAnimationFrame(step);
+            }
+
+            var statValues = document.querySelectorAll('.stat-value');
+            statValues.forEach(function(el) {
+                animateStatValue(el, 1000);
+            });
+
             var options = {
                 chart: {
                     type: 'area',
