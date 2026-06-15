@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,6 +18,12 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        <script>
+            if (localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        </script>
+
         <style>
             .anim-logo { opacity: 0; transform: scale(0.8); transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
             .anim-title { opacity: 0; transform: translateY(10px); transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -27,15 +33,15 @@
         </style>
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col items-center justify-center px-4 bg-gray-50">
+        <div class="min-h-screen flex flex-col items-center justify-center px-4 bg-gray-50 dark:bg-gray-900">
             <div class="w-full sm:max-w-md">
                 <div class="flex flex-col items-center mb-10">
                     <img id="anim-logo" src="{{ asset('images/logo/logo-icon.png') }}" alt="SIPAS UNSUB" class="anim-logo w-28 h-28 mb-5">
                     <h1 id="anim-title" class="anim-title text-3xl font-extrabold text-indigo-600 tracking-tight">SIPAS UNSUB</h1>
-                    <p id="anim-tagline" class="anim-tagline text-sm text-slate-400 mt-1.5">Smart Letter Archiving System</p>
+                    <p id="anim-tagline" class="anim-tagline text-sm text-slate-400 dark:text-gray-400 mt-1.5">Smart Letter Archiving System</p>
                 </div>
 
-                <div id="anim-card" class="anim-card bg-white rounded-xl shadow-lg px-9 py-9">
+                <div id="anim-card" class="anim-card bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 px-9 py-9">
                     {{ $slot }}
                 </div>
             </div>

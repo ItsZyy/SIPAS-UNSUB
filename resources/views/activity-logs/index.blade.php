@@ -1,57 +1,49 @@
 <x-app-layout>
-    <div class="flex min-h-screen">
-        @include('layouts.sidebar')
-
-        <main class="flex-1 p-8">
+@include('layouts.sidebar')
+<main class="p-8">
             <div class="max-w-7xl mx-auto">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold text-gray-900">Log Aktivitas</h2>
+                    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Log Aktivitas</h2>
                 </div>
-
                 @if(session('success'))
-                    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-400 rounded-r-md">
-                        <p class="text-sm text-green-700">{{ session('success') }}</p>
+                    <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border-l-4 border-green-400 dark:border-green-600 rounded-r-md">
+                        <p class="text-sm text-green-700 dark:text-green-300">{{ session('success') }}</p>
                     </div>
                 @endif
-
                 @if(session('error'))
-                    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-md">
-                        <p class="text-sm text-red-700">{{ session('error') }}</p>
+                    <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 dark:border-red-600 rounded-r-md">
+                        <p class="text-sm text-red-700 dark:text-red-300">{{ session('error') }}</p>
                     </div>
                 @endif
-
                 @if($errors->any())
-                    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-md">
-                        <p class="text-sm text-red-700">{{ $errors->first() }}</p>
+                    <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 dark:border-red-600 rounded-r-md">
+                        <p class="text-sm text-red-700 dark:text-red-300">{{ $errors->first() }}</p>
                     </div>
                 @endif
-
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900/30 sm:rounded-lg mb-6">
                     <div class="p-4 sm:p-6">
                         <form method="GET" action="{{ route('activity-logs.index') }}">
                             <div class="flex items-end space-x-3">
                                 <div class="flex-1">
-                                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Log</label>
-                                    <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Cari pengguna, aktivitas, atau detail..." class="block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cari Log</label>
+                                    <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Cari pengguna, aktivitas, atau detail..." class="block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 rounded-md shadow-sm dark:shadow-gray-900/30 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                 </div>
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     Cari
                                 </button>
-                                <a href="{{ route('activity-logs.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <a href="{{ route('activity-logs.index') }}" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm dark:shadow-gray-900/30 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                     Reset
                                 </a>
                             </div>
                         </form>
                     </div>
                 </div>
-
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900/30 sm:rounded-lg">
                     <div class="p-6">
                         @if($logs->count() > 0)
                             <form id="bulk-delete-form" method="POST" action="{{ route('activity-logs.destroy-selected') }}">
                                 @csrf
                                 @method('DELETE')
-
                                 <div class="flex items-center justify-between mb-4">
                                     <div class="flex items-center space-x-3">
                                         <button type="button" id="delete-selected-btn" disabled
@@ -66,74 +58,73 @@
                                         </button>
                                     </div>
                                 </div>
-
                                 <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
+                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                        <thead class="bg-gray-50 dark:bg-gray-800/50">
                                             <tr>
                                                 <th class="px-6 py-3 text-left">
                                                     <input type="checkbox" id="select-all"
-                                                           class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                                                           class="rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm dark:shadow-gray-900/30 focus:ring-indigo-500">
                                                 </th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pengguna</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktivitas</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Detail</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aksi</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Waktu</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Pengguna</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aktivitas</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Detail</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
+                                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                             @foreach($logs as $log)
-                                                <tr class="hover:bg-gray-50">
+                                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                         <input type="checkbox" name="selected_ids[]" value="{{ $log->id }}"
-                                                               class="log-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                                                               class="log-checkbox rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm dark:shadow-gray-900/30 focus:ring-indigo-500">
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                         @if(in_array($log->activity, ['UPLOAD', 'EDIT', 'DOWNLOAD']) && $log->archive_id)
                                                             <a href="{{ route('archives.show', $log->archive_id) }}"
-                                                               class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                                               class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-gray-700 transition">
                                                                 Detail
                                                             </a>
                                                         @elseif($log->activity === 'DELETE' && ($log->archive_title || $log->archive_number))
-                                                            <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded bg-gray-100 text-gray-500">
+                                                            <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
                                                                 Surat telah dihapus
                                                             </span>
                                                         @else
                                                             <span class="text-gray-300 text-xs">--</span>
                                                         @endif
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                                         {{ $log->created_at->isoFormat('D MMMM Y, HH:mm') }}
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                                                         {{ $log->user->name }}
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                         @if($log->user->isAdmin())
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Admin</span>
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">Admin</span>
                                                         @else
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Operator</span>
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800">Operator</span>
                                                         @endif
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                         @php
                                                             $badge = match($log->activity) {
-                                                                'LOGIN' => ['bg-green-100', 'text-green-800'],
-                                                                'LOGOUT' => ['bg-gray-100', 'text-gray-800'],
-                                                                'UPLOAD' => ['bg-blue-100', 'text-blue-800'],
-                                                                'EDIT' => ['bg-yellow-100', 'text-yellow-800'],
-                                                                'DELETE' => ['bg-red-100', 'text-red-800'],
-                                                                'DOWNLOAD' => ['bg-purple-100', 'text-purple-800'],
-                                                                default => ['bg-gray-100', 'text-gray-800'],
+                                                                'LOGIN' => ['bg-green-100 dark:bg-green-900/50', 'text-green-800 dark:text-green-300'],
+                                                                'LOGOUT' => ['bg-gray-100 dark:bg-gray-700', 'text-gray-800'],
+                                                                'UPLOAD' => ['bg-blue-100 dark:bg-blue-900/50', 'text-blue-800 dark:text-blue-300'],
+                                                                'EDIT' => ['bg-yellow-100 dark:bg-yellow-900/50', 'text-yellow-800 dark:text-yellow-300'],
+                                                                'DELETE' => ['bg-red-100 dark:bg-red-900/50', 'text-red-800 dark:text-red-300'],
+                                                                'DOWNLOAD' => ['bg-purple-100 dark:bg-purple-900/50', 'text-purple-800 dark:text-purple-300'],
+                                                                default => ['bg-gray-100 dark:bg-gray-700', 'text-gray-800'],
                                                             };
                                                         @endphp
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $badge[0] }} {{ $badge[1] }}">
                                                             {{ $log->activity }}
                                                         </span>
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-600 max-w-md">
+                                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400 max-w-md">
                                                         {{ $log->description }}
                                                     </td>
                                                 </tr>
@@ -141,18 +132,17 @@
                                         </tbody>
                                     </table>
                                 </div>
-
                                 <div class="mt-4">
                                     {{ $logs->links() }}
                                 </div>
                             </form>
                         @else
                             <div class="text-center py-12">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada log aktivitas</h3>
-                                <p class="mt-1 text-sm text-gray-500">Log akan muncul saat pengguna melakukan aktivitas di sistem.</p>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Belum ada log aktivitas</h3>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Log akan muncul saat pengguna melakukan aktivitas di sistem.</p>
                             </div>
                         @endif
                     </div>
@@ -161,17 +151,16 @@
         </main>
     </div>
 </x-app-layout>
-
 {{-- Modal Hapus Satu --}}
 <x-modal name="confirm-delete" :show="false" maxWidth="md">
     <div class="p-6">
-        <h3 class="text-lg font-medium text-gray-900">Konfirmasi Hapus</h3>
-        <p class="mt-2 text-sm text-gray-600" id="delete-single-text">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Konfirmasi Hapus</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400" id="delete-single-text">
             Apakah Anda yakin ingin menghapus log aktivitas ini?
         </p>
         <div class="mt-6 flex justify-end space-x-3">
             <button type="button" x-on:click="$dispatch('close-modal', 'confirm-delete')"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 transition ease-in-out duration-150">
+                    class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm dark:shadow-gray-900/30 hover:bg-gray-50 dark:hover:bg-gray-700 transition ease-in-out duration-150">
                 Batal
             </button>
             <form id="delete-single-form" method="POST">
@@ -185,17 +174,16 @@
         </div>
     </div>
 </x-modal>
-
 {{-- Modal Hapus Terpilih --}}
 <x-modal name="confirm-delete-selected" :show="false" maxWidth="md">
     <div class="p-6">
-        <h3 class="text-lg font-medium text-gray-900">Konfirmasi Hapus</h3>
-        <p class="mt-2 text-sm text-gray-600">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Konfirmasi Hapus</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Apakah Anda yakin ingin menghapus seluruh log aktivitas yang dipilih?
         </p>
         <div class="mt-6 flex justify-end space-x-3">
             <button type="button" x-on:click="$dispatch('close-modal', 'confirm-delete-selected')"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 transition ease-in-out duration-150">
+                    class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm dark:shadow-gray-900/30 hover:bg-gray-50 dark:hover:bg-gray-700 transition ease-in-out duration-150">
                 Batal
             </button>
             <button type="submit" form="bulk-delete-form"
@@ -205,18 +193,17 @@
         </div>
     </div>
 </x-modal>
-
 {{-- Modal Hapus Semua --}}
 <x-modal name="confirm-delete-all" :show="false" maxWidth="md">
     <div class="p-6">
-        <h3 class="text-lg font-medium text-gray-900">Konfirmasi Hapus</h3>
-        <p class="mt-2 text-sm text-gray-600">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Konfirmasi Hapus</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Apakah Anda yakin ingin menghapus seluruh log aktivitas?<br>
-            <span class="font-semibold text-red-600">Tindakan ini tidak dapat dibatalkan.</span>
+            <span class="font-semibold text-red-600 dark:text-red-400">Tindakan ini tidak dapat dibatalkan.</span>
         </p>
         <div class="mt-6 flex justify-end space-x-3">
             <button type="button" x-on:click="$dispatch('close-modal', 'confirm-delete-all')"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 transition ease-in-out duration-150">
+                    class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm dark:shadow-gray-900/30 hover:bg-gray-50 dark:hover:bg-gray-700 transition ease-in-out duration-150">
                 Batal
             </button>
             <form method="POST" action="{{ route('activity-logs.destroy-all') }}">
@@ -230,19 +217,16 @@
         </div>
     </div>
 </x-modal>
-
 <script>
 // Select All checkbox
 document.getElementById('select-all')?.addEventListener('change', function() {
     document.querySelectorAll('.log-checkbox').forEach(cb => cb.checked = this.checked);
     updateDeleteSelectedButton();
 });
-
 // Individual checkboxes
 document.querySelectorAll('.log-checkbox').forEach(cb => {
     cb.addEventListener('change', updateDeleteSelectedButton);
 });
-
 function updateDeleteSelectedButton() {
     const checked = document.querySelectorAll('.log-checkbox:checked');
     const btn = document.getElementById('delete-selected-btn');
@@ -254,20 +238,17 @@ function updateDeleteSelectedButton() {
         btn.textContent = 'Hapus Terpilih';
     }
 }
-
 // Single delete
 function confirmDelete(url) {
     document.getElementById('delete-single-form').action = url;
     window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-delete' }));
 }
-
 // Bulk delete
 function showDeleteSelectedModal() {
     const checked = document.querySelectorAll('.log-checkbox:checked');
     if (checked.length === 0) return;
     window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-delete-selected' }));
 }
-
 // Delete all
 function showDeleteAllModal() {
     window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-delete-all' }));
