@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ArchiveRequest;
+use App\Models\ActivityLog;
 use App\Models\Archive;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
@@ -62,7 +63,17 @@ class ArchiveController extends Controller
 
         $data['uploaded_by'] = Auth::id();
 
-        Archive::create($data);
+        $archive = Archive::create($data);
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'UPLOAD',
+            'description' => 'Mengunggah surat: ' . $archive->file_name,
+            'archive_id' => $archive->id,
+            'archive_title' => $archive->title,
+            'archive_number' => $archive->document_number,
+            'created_at' => now(),
+        ]);
 
         return redirect()->route('archives.index')
             ->with('success', 'Arsip berhasil ditambahkan.');
@@ -94,19 +105,60 @@ class ArchiveController extends Controller
 
         $archive->update($data);
 
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'EDIT',
+            'description' => 'Mengubah data surat: ' . $archive->file_name,
+            'archive_id' => $archive->id,
+            'archive_title' => $archive->title,
+            'archive_number' => $archive->document_number,
+            'created_at' => now(),
+        ]);
+
         return redirect()->route('archives.index')
             ->with('success', 'Arsip berhasil diperbarui.');
     }
 
     public function destroy(Archive $archive): RedirectResponse
     {
+        $fileName = $archive->file_name;
+
         if ($archive->file_path && Storage::disk('public')->exists($archive->file_path)) {
             Storage::disk('public')->delete($archive->file_path);
         }
 
         $archive->delete();
 
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'DELETE',
+            'description' => 'Menghapus surat: ' . $fileName,
+            'archive_title' => $archive->title,
+            'archive_number' => $archive->document_number,
+            'created_at' => now(),
+        ]);
+
         return redirect()->route('archives.index')
             ->with('success', 'Arsip berhasil dihapus.');
+    }
+
+    public function download(Archive $archive): mixed
+    {
+        if (!$archive->file_path || !Storage::disk('public')->exists($archive->file_path)) {
+            return redirect()->route('archives.show', $archive)
+                ->with('error', 'File tidak ditemukan.');
+        }
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'DOWNLOAD',
+            'description' => 'Mengunduh surat: ' . $archive->file_name,
+            'archive_id' => $archive->id,
+            'archive_title' => $archive->title,
+            'archive_number' => $archive->document_number,
+            'created_at' => now(),
+        ]);
+
+        return Storage::disk('public')->download($archive->file_path);
     }
 }

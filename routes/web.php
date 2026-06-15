@@ -57,9 +57,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'show'])
         ->middleware('role:admin,operator')
         ->name('archives.show');
+
+    Route::get('/admin/archives/{archive}/download', [App\Http\Controllers\ArchiveController::class, 'download'])
+        ->middleware('role:admin,operator')
+        ->name('archives.download');
 });
 
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/admin/activity-logs', [App\Http\Controllers\ActivityLogController::class, 'index'])
+        ->name('activity-logs.index');
+    Route::delete('/admin/activity-logs/selected/destroy', [App\Http\Controllers\ActivityLogController::class, 'destroySelected'])
+        ->name('activity-logs.destroy-selected');
+    Route::delete('/admin/activity-logs/all/destroy', [App\Http\Controllers\ActivityLogController::class, 'destroyAll'])
+        ->name('activity-logs.destroy-all');
+    Route::delete('/admin/activity-logs/{activityLog}', [App\Http\Controllers\ActivityLogController::class, 'destroy'])
+        ->name('activity-logs.destroy');
+
     Route::get('/admin/users', [App\Http\Controllers\UserController::class, 'index'])
         ->name('users.index');
     Route::get('/admin/users/create', [App\Http\Controllers\UserController::class, 'create'])

@@ -8,7 +8,9 @@
         <title>{{ config('app.name', 'SIPAS UNSUB') }}</title>
 
         <!-- Favicon -->
-        <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('logo-title.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo-title.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Archive::class, 'uploaded_by');
     }
+
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
 }
