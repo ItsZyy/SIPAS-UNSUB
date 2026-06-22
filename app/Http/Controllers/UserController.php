@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -25,7 +26,15 @@ class UserController extends Controller
 
     public function store(UserRequest $request): RedirectResponse
     {
-        User::create($request->validated());
+        $user = User::create($request->validated());
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'CREATE_USER',
+            'category' => 'system',
+            'description' => 'Menambahkan pengguna: ' . $user->name . ' (' . $user->email . ')',
+            'created_at' => now(),
+        ]);
 
         return redirect()->route('users.index')
             ->with('success', 'Pengguna berhasil ditambahkan.');
@@ -40,6 +49,14 @@ class UserController extends Controller
     {
         $user->update($request->validated());
 
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'UPDATE_USER',
+            'category' => 'system',
+            'description' => 'Mengubah data pengguna: ' . $user->name . ' (' . $user->email . ')',
+            'created_at' => now(),
+        ]);
+
         return redirect()->route('users.index')
             ->with('success', 'Pengguna berhasil diperbarui.');
     }
@@ -53,6 +70,14 @@ class UserController extends Controller
     {
         $user->update([
             'password' => $request->password,
+        ]);
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'RESET_PASSWORD',
+            'category' => 'system',
+            'description' => 'Mereset password pengguna: ' . $user->name . ' (' . $user->email . ')',
+            'created_at' => now(),
         ]);
 
         return redirect()->route('users.index')
@@ -72,6 +97,14 @@ class UserController extends Controller
         }
 
         $user->delete();
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'DELETE_USER',
+            'category' => 'system',
+            'description' => 'Menghapus pengguna: ' . $user->name . ' (' . $user->email . ')',
+            'created_at' => now(),
+        ]);
 
         return redirect()->route('users.index')
             ->with('success', 'Pengguna berhasil dihapus.');

@@ -97,6 +97,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::delete('/admin/activity-logs/{activityLog}', [App\Http\Controllers\ActivityLogController::class, 'destroy'])
         ->name('activity-logs.destroy');
 
+    Route::get('/admin/system-logs', [App\Http\Controllers\ActivityLogController::class, 'systemIndex'])
+        ->name('system-logs.index');
+    Route::delete('/admin/system-logs/selected/destroy', [App\Http\Controllers\ActivityLogController::class, 'systemDestroySelected'])
+        ->name('system-logs.destroy-selected');
+    Route::delete('/admin/system-logs/all/destroy', [App\Http\Controllers\ActivityLogController::class, 'systemDestroyAll'])
+        ->name('system-logs.destroy-all');
+    Route::delete('/admin/system-logs/{activityLog}', [App\Http\Controllers\ActivityLogController::class, 'systemDestroy'])
+        ->name('system-logs.destroy');
+
     Route::get('/admin/users', [App\Http\Controllers\UserController::class, 'index'])
         ->name('users.index');
     Route::get('/admin/users/create', [App\Http\Controllers\UserController::class, 'create'])

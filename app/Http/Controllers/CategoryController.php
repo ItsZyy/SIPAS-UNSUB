@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
+use App\Models\ActivityLog;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -23,7 +25,15 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request): RedirectResponse
     {
-        Category::create($request->validated());
+        $category = Category::create($request->validated());
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'CREATE_CATEGORY',
+            'category' => 'system',
+            'description' => 'Menambahkan kategori: ' . $category->name,
+            'created_at' => now(),
+        ]);
 
         return redirect()->route('categories.index')
             ->with('success', 'Kategori berhasil ditambahkan.');
@@ -38,13 +48,30 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
 
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'UPDATE_CATEGORY',
+            'category' => 'system',
+            'description' => 'Mengubah kategori: ' . $category->name,
+            'created_at' => now(),
+        ]);
+
         return redirect()->route('categories.index')
             ->with('success', 'Kategori berhasil diperbarui.');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
+        $categoryName = $category->name;
         $category->delete();
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'DELETE_CATEGORY',
+            'category' => 'system',
+            'description' => 'Menghapus kategori: ' . $categoryName,
+            'created_at' => now(),
+        ]);
 
         return redirect()->route('categories.index')
             ->with('success', 'Kategori berhasil dihapus.');

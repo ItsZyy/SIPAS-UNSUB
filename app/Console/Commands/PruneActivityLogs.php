@@ -20,6 +20,14 @@ class PruneActivityLogs extends Command
 
         $deleted = ActivityLog::where('created_at', '<', $cutoff)->delete();
 
+        ActivityLog::create([
+            'user_id' => null,
+            'activity' => 'PRUNE_LOGS',
+            'category' => 'system',
+            'description' => 'Membersihkan log yang lebih lama dari ' . $retentionDays . ' hari (dihapus: ' . $deleted . ' log)',
+            'created_at' => now(),
+        ]);
+
         Log::info('[PruneActivityLogs] Cleanup completed', [
             'retention_days' => $retentionDays,
             'deleted_count' => $deleted,

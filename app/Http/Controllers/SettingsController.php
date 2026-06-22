@@ -42,6 +42,7 @@ class SettingsController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'PROFILE',
+            'category' => 'activity',
             'description' => 'Memperbarui profil akun',
             'created_at' => now(),
         ]);
@@ -69,6 +70,7 @@ class SettingsController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'PASSWORD',
+            'category' => 'activity',
             'description' => 'Mengubah password akun',
             'created_at' => now(),
         ]);
@@ -139,7 +141,8 @@ class SettingsController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'SETTINGS',
-            'description' => 'Memperbarui konfigurasi sistem',
+            'category' => 'system',
+            'description' => 'Memperbarui konfigurasi sistem: Session Timeout=' . $validated['sessionTimeout'] . ' menit, Max File Size=' . $validated['maxFileSize'] . ' MB, Retensi Log=' . $validated['logRetentionDays'] . ' hari',
             'created_at' => now(),
         ]);
 
@@ -157,6 +160,7 @@ class SettingsController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'LOGOUT',
+            'category' => 'activity',
             'description' => 'Logout otomatis karena session timeout',
             'created_at' => now(),
         ]);

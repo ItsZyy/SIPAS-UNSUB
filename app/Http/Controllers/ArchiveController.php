@@ -80,6 +80,7 @@ class ArchiveController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'UPLOAD',
+            'category' => 'system',
             'description' => 'Mengunggah surat: ' . $archive->file_name,
             'archive_id' => $archive->id,
             'archive_title' => $archive->title,
@@ -93,6 +94,17 @@ class ArchiveController extends Controller
 
     public function show(Archive $archive): View
     {
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'activity' => 'VIEW',
+            'category' => 'activity',
+            'description' => 'Melihat surat: ' . $archive->file_name,
+            'archive_id' => $archive->id,
+            'archive_title' => $archive->title,
+            'archive_number' => $archive->document_number,
+            'created_at' => now(),
+        ]);
+
         return view('archives.show', compact('archive'));
     }
 
@@ -131,6 +143,7 @@ class ArchiveController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'EDIT',
+            'category' => 'system',
             'description' => 'Mengubah data surat: ' . $archive->file_name,
             'archive_id' => $archive->id,
             'archive_title' => $archive->title,
@@ -155,6 +168,7 @@ class ArchiveController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'DELETE',
+            'category' => 'system',
             'description' => 'Menghapus surat: ' . $fileName,
             'archive_title' => $archive->title,
             'archive_number' => $archive->document_number,
@@ -175,6 +189,7 @@ class ArchiveController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'DOWNLOAD',
+            'category' => 'activity',
             'description' => 'Mengunduh surat: ' . $archive->file_name,
             'archive_id' => $archive->id,
             'archive_title' => $archive->title,

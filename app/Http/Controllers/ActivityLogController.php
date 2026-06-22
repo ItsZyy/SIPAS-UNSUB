@@ -13,6 +13,7 @@ class ActivityLogController extends Controller
     public function index(): View
     {
         $logs = ActivityLog::with('user')
+            ->where('category', 'activity')
             ->when(request('search'), function ($query) {
                 $query->where(function ($q) {
                     $q->where('activity', 'like', '%' . request('search') . '%')
@@ -29,6 +30,26 @@ class ActivityLogController extends Controller
         return view('activity-logs.index', compact('logs'));
     }
 
+    public function systemIndex(): View
+    {
+        $logs = ActivityLog::with('user')
+            ->where('category', 'system')
+            ->when(request('search'), function ($query) {
+                $query->where(function ($q) {
+                    $q->where('activity', 'like', '%' . request('search') . '%')
+                      ->orWhere('description', 'like', '%' . request('search') . '%')
+                      ->orWhereHas('user', function ($userQuery) {
+                          $userQuery->where('name', 'like', '%' . request('search') . '%');
+                      });
+                });
+            })
+            ->latest('created_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('system-logs.index', compact('logs'));
+    }
+
     public function destroy(ActivityLog $activityLog): RedirectResponse
     {
         $activityLog->delete();
@@ -41,17 +62,7 @@ class ActivityLogController extends Controller
     {
         $ids = array_map('intval', (array) $request->input('selected_ids', []));
 
-        Log::debug('[ActivityLog] destroySelected - Raw input:', $request->all());
-        Log::debug('[ActivityLog] destroySelected - Cast IDs:', $ids);
-        Log::debug('[ActivityLog] destroySelected - Type:', ['type' => gettype($ids)]);
-
-        $query = ActivityLog::whereIn('id', $ids);
-        Log::debug('[ActivityLog] destroySelected - SQL:', [$query->toSql()]);
-        Log::debug('[ActivityLog] destroySelected - Bindings:', $query->getBindings());
-
-        $deleted = $query->delete();
-
-        Log::debug('[ActivityLog] destroySelected - Deleted count:', ['count' => $deleted]);
+        $deleted = ActivityLog::whereIn('id', $ids)->delete();
 
         $message = $deleted > 0
             ? $deleted . ' log aktivitas berhasil dihapus.'
@@ -63,20 +74,51 @@ class ActivityLogController extends Controller
 
     public function destroyAll(): RedirectResponse
     {
-        $count = ActivityLog::count();
+        $count = ActivityLog::where('category', 'activity')->count();
 
-        Log::debug('[ActivityLog] destroyAll - Total records before delete:', ['count' => $count]);
-
-        ActivityLog::query()->delete();
-
-        $afterCount = ActivityLog::count();
-        Log::debug('[ActivityLog] destroyAll - Records after delete:', ['count' => $afterCount]);
+        ActivityLog::where('category', 'activity')->delete();
 
         $message = $count > 0
             ? 'Seluruh log aktivitas berhasil dihapus.'
             : 'Tidak ada log aktivitas untuk dihapus.';
 
         return redirect()->route('activity-logs.index')
+            ->with($count > 0 ? 'success' : 'error', $message);
+    }
+
+    public function systemDestroy(ActivityLog $activityLog): RedirectResponse
+    {
+        $activityLog->delete();
+
+        return redirect()->route('system-logs.index')
+            ->with('success', 'Log sistem berhasil dihapus.');
+    }
+
+    public function systemDestroySelected(Request $request): RedirectResponse
+    {
+        $ids = array_map('intval', (array) $request->input('selected_ids', []));
+
+        $deleted = ActivityLog::whereIn('id', $ids)->delete();
+
+        $message = $deleted > 0
+            ? $deleted . ' log sistem berhasil dihapus.'
+            : 'Tidak ada log sistem yang dihapus.';
+
+        return redirect()->route('system-logs.index')
+            ->with($deleted > 0 ? 'success' : 'error', $message);
+    }
+
+    public function systemDestroyAll(): RedirectResponse
+    {
+        $count = ActivityLog::where('category', 'system')->count();
+
+        ActivityLog::where('category', 'system')->delete();
+
+        $message = $count > 0
+            ? 'Seluruh log sistem berhasil dihapus.'
+            : 'Tidak ada log sistem untuk dihapus.';
+
+        return redirect()->route('system-logs.index')
             ->with($count > 0 ? 'success' : 'error', $message);
     }
 }

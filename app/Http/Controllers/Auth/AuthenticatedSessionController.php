@@ -26,6 +26,7 @@ class AuthenticatedSessionController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'LOGIN',
+            'category' => 'activity',
             'description' => 'Masuk ke sistem',
             'created_at' => now(),
         ]);
@@ -38,6 +39,7 @@ class AuthenticatedSessionController extends Controller
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity' => 'LOGOUT',
+            'category' => 'activity',
             'description' => 'Keluar dari sistem',
             'created_at' => now(),
         ]);
