@@ -8,6 +8,7 @@ use App\Models\Archive;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -58,7 +59,18 @@ class ArchiveController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('file')) {
-            $data['file_path'] = $request->file('file')->store('archives', 'public');
+            try {
+                $data['file_path'] = $request->file('file')->store('archives', 'public');
+            } catch (\Exception $e) {
+                Log::error('[UPLOAD] Gagal menyimpan file ke disk', [
+                    'error' => $e->getMessage(),
+                    'file' => $request->file('file')->getClientOriginalName(),
+                    'size' => $request->file('file')->getSize(),
+                ]);
+                return redirect()->back()->withInput()->with('error',
+                    'Gagal menyimpan file ke server. Penyebab: ' . $e->getMessage()
+                );
+            }
         }
 
         $data['uploaded_by'] = Auth::id();
@@ -96,11 +108,22 @@ class ArchiveController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('file')) {
-            if ($archive->file_path && Storage::disk('public')->exists($archive->file_path)) {
-                Storage::disk('public')->delete($archive->file_path);
-            }
+            try {
+                if ($archive->file_path && Storage::disk('public')->exists($archive->file_path)) {
+                    Storage::disk('public')->delete($archive->file_path);
+                }
 
-            $data['file_path'] = $request->file('file')->store('archives', 'public');
+                $data['file_path'] = $request->file('file')->store('archives', 'public');
+            } catch (\Exception $e) {
+                Log::error('[UPLOAD] Gagal menyimpan file ke disk saat update', [
+                    'error' => $e->getMessage(),
+                    'file' => $request->file('file')->getClientOriginalName(),
+                    'size' => $request->file('file')->getSize(),
+                ]);
+                return redirect()->back()->withInput()->with('error',
+                    'Gagal menyimpan file ke server. Penyebab: ' . $e->getMessage()
+                );
+            }
         }
 
         $archive->update($data);

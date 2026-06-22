@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,6 +16,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::get('/settings/profile', [SettingsController::class, 'profile'])->name('settings.profile');
+    Route::patch('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.update-profile');
+    Route::get('/settings/security', [SettingsController::class, 'security'])->name('settings.security');
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.update-password');
+    Route::get('/settings/theme', [SettingsController::class, 'theme'])->name('settings.theme');
+    Route::put('/settings/theme', [SettingsController::class, 'updateTheme'])->name('settings.update-theme');
+    Route::post('/settings/toggle-theme', [SettingsController::class, 'toggleTheme'])->name('settings.toggle-theme');
+
+    Route::post('/settings/keep-alive', [SettingsController::class, 'keepAlive'])->name('settings.keep-alive');
+    Route::post('/auto-logout', [SettingsController::class, 'autoLogout'])->name('auto-logout');
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/settings/system', [SettingsController::class, 'system'])->name('settings.system');
+        Route::put('/settings/system', [SettingsController::class, 'updateSystemSettings'])->name('settings.update-system');
+    });
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

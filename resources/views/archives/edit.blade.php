@@ -51,6 +51,10 @@
                                 @endif
                                 <input id="file" name="file" type="file" accept="application/pdf" class="block mt-1 w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
                                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kosongkan jika tidak ingin mengubah file.</p>
+                                <p class="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
+                                    Aplikasi: <strong>{{ (int) \App\Models\SystemSetting::getValue('max_file_size', '25') }} MB</strong>
+                                    &middot; Server: <strong>{{ ini_get('upload_max_filesize') }}</strong>
+                                </p>
                                 <x-input-error class="mt-2" :messages="$errors->get('file')" />
                             </div>
                             <div class="flex items-center space-x-3">

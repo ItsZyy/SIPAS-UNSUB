@@ -117,6 +117,8 @@
                                                                 'EDIT' => ['bg-yellow-100 dark:bg-yellow-900/50', 'text-yellow-800 dark:text-yellow-300'],
                                                                 'DELETE' => ['bg-red-100 dark:bg-red-900/50', 'text-red-800 dark:text-red-300'],
                                                                 'DOWNLOAD' => ['bg-purple-100 dark:bg-purple-900/50', 'text-purple-800 dark:text-purple-300'],
+                                                                'PROFILE' => ['bg-cyan-100 dark:bg-cyan-900/50', 'text-cyan-800 dark:text-cyan-300'],
+                                                                'PASSWORD' => ['bg-orange-100 dark:bg-orange-900/50', 'text-orange-800 dark:text-orange-300'],
                                                                 default => ['bg-gray-100 dark:bg-gray-700', 'text-gray-800'],
                                                             };
                                                         @endphp
