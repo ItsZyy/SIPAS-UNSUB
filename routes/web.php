@@ -81,6 +81,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('archives.download');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/about', [App\Http\Controllers\AboutController::class, 'index'])
+        ->middleware('role:admin,operator')
+        ->name('about');
+});
+
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/admin/activity-logs', [App\Http\Controllers\ActivityLogController::class, 'index'])
         ->name('activity-logs.index');

@@ -54,6 +54,16 @@
                     </a>
                 </div>
             @endif
+
+            <div class="pt-3 mt-3 border-t border-gray-200 dark:border-gray-700">
+                <a href="{{ route('about') }}"
+                   class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('about') ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Tentang Aplikasi
+                </a>
+            </div>
         </nav>
     </div>
 
